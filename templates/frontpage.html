@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% load i18n bootstrap3 socialaccount account  %}
+
+{% block content %}
+    <div class="container">
+        <div class="page-header">
+            <h1>{% trans "We Both Like" %}</h1>
+        </div>
+        {% if not user_fb_account %}
+            <p class="lead">{% trans "To find your soulmate, log in via Facebook" %}</p>
+            <a href="{% provider_login_url "facebook" method="js_sdk" %}">{% trans "Facebook Connect" %}</a>
+        {% else %}
+            <p>{{ user_fb_account }}</p><a href="/accounts/logout">{% trans "Log out" %}</a>
+        {% endif %}
+        {% if question %}
+            <form action="" method="post" class="form">
+                {% csrf_token %}
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ question.text }}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label class="control-label" for="id_answer">{% trans "Answer" %}</label>
+                            <div id="id_answer">
+                                <div class="radio">
+                                    <label for="id_answer_0">
+                                        <input class="" id="id_answer_0" name="answer" required="required" title=""
+                                               type="radio" value="1">
+                                        {% trans "Yes" %}
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label for="id_answer_1">
+                                        <input class="" id="id_answer_1" name="answer" required="required" title=""
+                                               type="radio" value="0">
+                                        {% trans "No" %}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <input name="question" type="hidden" value="{{ question.id }}">
+                    </div>
+                </div>
+                {% buttons %}
+                    <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
+                {% endbuttons %}
+            </form>
+        {% endif %}
+        {% if matches %}
+            <p>{% trans "Matches" %}: {{ match_count }}</p>
+        {% endif %}
+        {% if my_match_fb_account %}
+            <p>{% trans "Your best match" %}</p>
+            <a href="https://www.facebook.com/{{ my_match_fb_account.account.uid }}">
+                <img class="img-responsive" src="{{ my_match_fb_account.get_avatar_url }}" alt="{% trans "My match" %}">
+            </a>
+        {% endif %}
+    </div>
+    <footer class="footer">
+        <div class="container">
+            <p class="text-muted">&copy; {% trans "2015 Mikk, Paul ja Lauri" %}</p>
+            <div class="fb-like" data-href="https://www.facebook.com/webothlike"
+                 data-layout="standard" data-action="like" data-show-faces="false"
+                 data-share="true">
+            </div>
+        </div>
+    </footer>
+{% endblock %}
