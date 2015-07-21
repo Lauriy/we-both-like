@@ -1,5 +1,5 @@
 from django import forms
-from WeBothLikeWeb.models import Question
+from WeBothLikeCore.models import Question
 
 
 class AnswerQuestionForm(forms.Form):
@@ -9,3 +9,7 @@ class AnswerQuestionForm(forms.Form):
         choices=((0, 'False'), (1, 'True')),
         widget=forms.RadioSelect
     )
+
+
+class QuestionsResetForm(forms.Form):
+    reset = forms.BooleanField()

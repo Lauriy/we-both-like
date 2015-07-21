@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'allauth.socialaccount.providers.facebook',
     'bootstrap3',
     'debug_toolbar',
+    'WeBothLikeCore',
     'WeBothLikeWeb'
 )
 

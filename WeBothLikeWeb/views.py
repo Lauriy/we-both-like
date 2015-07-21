@@ -1,9 +1,8 @@
 from allauth.socialaccount.models import SocialAccount
-from django.contrib.auth.models import User
 from django.db.models import Q
 from django.shortcuts import render
-from WeBothLikeWeb.models import Question, UserAnswer
-from WeBothLikeWeb.forms import AnswerQuestionForm
+from WeBothLikeCore.models import Question, UserAnswer
+from WeBothLikeWeb.forms import AnswerQuestionForm, QuestionsResetForm
 
 
 def frontpage(request):
@@ -14,6 +13,7 @@ def frontpage(request):
     my_match_fb_account = None
     if request.method == 'POST' and request.user.id:
         form = AnswerQuestionForm(request.POST)
+        reset_form = QuestionsResetForm(request.POST)
         if form.is_valid():
             a = UserAnswer(
                 question=form.cleaned_data['question'],
@@ -21,6 +21,8 @@ def frontpage(request):
                 answer=form.cleaned_data['answer']
             )
             a.save()
+        if reset_form.is_valid():
+            UserAnswer.objects.filter(user=request.user).delete()
     if request.user.id:
         user_social_account = SocialAccount.objects.filter(provider='facebook', user=request.user).first()
         next_question_to_answer = Question.objects.filter(active=True)\
@@ -38,14 +40,15 @@ def frontpage(request):
                 last_match = match_backup
         matching_answer_qs = matching_answer_qs.distinct('user')
         match_count = matching_answer_qs.count()
-        if match_count == 1 or total_questions == my_answers_count and last_match:
+        if match_count == 0:
+            match_count = 1
+        if match_count == 1 or total_questions == my_answers_count and last_match is not None:
             my_match_user = last_match.user
             my_match_fb_account = SocialAccount.objects\
                 .filter(provider='facebook', user=my_match_user).first()\
                 .get_provider_account()
     if user_social_account:
         user_fb_account = user_social_account.get_provider_account()
-
     context = {
         'user_fb_account': user_fb_account if user_fb_account else None,
         'question': next_question_to_answer,

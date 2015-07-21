@@ -1,4 +1,4 @@
 from django.contrib import admin
-from WeBothLikeWeb.models import Question
+from WeBothLikeCore.models import Question
 
 admin.site.register(Question)

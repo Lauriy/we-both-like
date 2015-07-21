@@ -5,66 +5,77 @@
 {% block content %}
     <div class="container">
         <div class="page-header">
-            <h1>{% trans "We Both Like" %}</h1>
+            <h1>{% trans "Find your soulmate" %}</h1>
         </div>
-        {% if not user_fb_account %}
-            <p class="lead">{% trans "To find your soulmate, log in via Facebook" %}</p>
-            <a href="{% provider_login_url "facebook" method="js_sdk" %}">{% trans "Facebook Connect" %}</a>
-        {% else %}
-            <p>{{ user_fb_account }}</p><a href="/accounts/logout">{% trans "Log out" %}</a>
-        {% endif %}
-        {% if question %}
-            <form action="" method="post" class="form">
-                {% csrf_token %}
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{{ question.text }}</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <label class="control-label" for="id_answer">{% trans "Answer" %}</label>
-                            <div id="id_answer">
-                                <div class="radio">
-                                    <label for="id_answer_0">
-                                        <input class="" id="id_answer_0" name="answer" required="required" title=""
-                                               type="radio" value="1">
-                                        {% trans "Yes" %}
-                                    </label>
+        <div class="col-xs-12">
+            {% if question %}
+                <div class="row">
+                    <form action="" method="post" class="form">
+                        {% csrf_token %}
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">{{ question.text }}</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="control-label" for="id_answer">{% trans "Answer" %}</label>
+                                    <div id="id_answer">
+                                        <div class="radio">
+                                            <label for="id_answer_0">
+                                                <input class="" id="id_answer_0" name="answer" required="required" title=""
+                                                       type="radio" value="1">
+                                                {% trans "Yes" %}
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label for="id_answer_1">
+                                                <input class="" id="id_answer_1" name="answer" required="required" title=""
+                                                       type="radio" value="0">
+                                                {% trans "No" %}
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="radio">
-                                    <label for="id_answer_1">
-                                        <input class="" id="id_answer_1" name="answer" required="required" title=""
-                                               type="radio" value="0">
-                                        {% trans "No" %}
-                                    </label>
-                                </div>
+                                <input name="question" type="hidden" value="{{ question.id }}">
                             </div>
                         </div>
-                        <input name="question" type="hidden" value="{{ question.id }}">
+                        {% buttons %}
+                            <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
+                        {% endbuttons %}
+                    </form>
+                </div>
+            {% endif %}
+            {% if match_count %}
+                <div class="row">{% trans "Matches" %}: {{ match_count }}</div>
+            {% endif %}
+            {% if my_match_fb_account %}
+                <br>
+                <div class="row">
+                    <div class="media">
+                        <div class="media-left">
+                            <a target="_blank" href="https://www.facebook.com/{{ my_match_fb_account.account.uid }}">
+                                <img class="img-circle media-object webothlike-match-image" src="{{ my_match_fb_account.get_avatar_url }}"
+                                     alt="{{ my_match_fb_account }}">
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading">{{ my_match_fb_account }}</h4>
+                        </div>
                     </div>
                 </div>
-                {% buttons %}
-                    <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
-                {% endbuttons %}
-            </form>
-        {% endif %}
-        {% if matches %}
-            <p>{% trans "Matches" %}: {{ match_count }}</p>
-        {% endif %}
-        {% if my_match_fb_account %}
-            <p>{% trans "Your best match" %}</p>
-            <a href="https://www.facebook.com/{{ my_match_fb_account.account.uid }}">
-                <img class="img-responsive" src="{{ my_match_fb_account.get_avatar_url }}" alt="{% trans "My match" %}">
-            </a>
-        {% endif %}
-    </div>
-    <footer class="footer">
-        <div class="container">
-            <p class="text-muted">&copy; {% trans "2015 Mikk, Paul ja Lauri" %}</p>
-            <div class="fb-like" data-href="https://www.facebook.com/webothlike"
-                 data-layout="standard" data-action="like" data-show-faces="false"
-                 data-share="true">
-            </div>
+            {% endif %}
+            <br>
+            {% if user_fb_account %}
+                <div class="row">
+                    <form action="" method="post" class="form">
+                        {% csrf_token %}
+                        <input name="reset" type="hidden" value="1">
+                        {% buttons %}
+                            <button type="submit" class="btn btn-primary">{% trans "Reset questions" %}</button>
+                        {% endbuttons %}
+                    </form>
+                </div>
+            {% endif %}
         </div>
-    </footer>
+    </div>
 {% endblock %}

@@ -22,9 +22,9 @@
     <![endif]-->
 </head>
 <body>
+{% include "header.html" %}
 {% block content %}{% endblock %}
-<!-- Begin page content -->
-
+{% include "footer.html" %}
 <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 {% bootstrap_javascript %}
 {% providers_media_js %}
