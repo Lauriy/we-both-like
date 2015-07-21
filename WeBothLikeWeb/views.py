@@ -38,7 +38,7 @@ def frontpage(request):
                 last_match = match_backup
         matching_answer_qs = matching_answer_qs.distinct('user')
         match_count = matching_answer_qs.count()
-        if match_count == 1 or total_questions == my_answers_count:
+        if match_count == 1 or total_questions == my_answers_count and last_match:
             my_match_user = last_match.user
             my_match_fb_account = SocialAccount.objects\
                 .filter(provider='facebook', user=my_match_user).first()\
