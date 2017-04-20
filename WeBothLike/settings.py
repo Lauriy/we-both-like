@@ -98,7 +98,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'webothlike',
         'USER': 'webothlike',
-        'PASSWORD': 'mellon',
+        'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': '',
     }
